@@ -17,10 +17,10 @@ Including another URLconf
 # inventory_management_backend/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from inventory.views import CustomAuthToken
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/token/', CustomAuthToken.as_view(), name='api_token_auth'),
+    path('inventory/', include('inventory.urls')),
+    path('api/auth/', include('inventory.urls')),
     # Add other URL patterns as needed
 ]

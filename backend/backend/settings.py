@@ -63,12 +63,15 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.permissions.AllowAny',
     ],
 }
 
 CORS_ALLOW_ALL_ORIGINS = True  # For development only. Configure properly for production.
 
 ROOT_URLCONF = 'backend.urls'
+
+AUTH_USER_MODEL = 'inventory.CustomUser'
 
 TEMPLATES = [
     {

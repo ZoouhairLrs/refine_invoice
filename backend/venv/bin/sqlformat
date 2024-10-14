@@ -1,4 +1,4 @@
-#!/home/nerd/Desktop/workspace/new-project-ilyass/backend/venv/bin/python3
+#!/goinfre/zlaarous/workspace/ilyass-project-new/backend/venv/bin/python3.9
 # -*- coding: utf-8 -*-
 import re
 import sys
