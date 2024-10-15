@@ -6,6 +6,7 @@ import { RootState } from './redux/store';
 import { logout } from './redux/authSlice';
 import { isTokenExpired } from './utils/authUtils';
 import AppRoutes from './routes/routes';
+import { JwtPayload, jwtDecode } from 'jwt-decode';
 
 const App = () => {
   const token = useSelector((state: RootState) => state.auth.token);

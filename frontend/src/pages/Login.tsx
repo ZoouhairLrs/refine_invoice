@@ -4,10 +4,16 @@ import { Button } from '@/components/ui/Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess } from '../redux/authSlice';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // let's setstate in store
+  const dispatch = useDispatch();
+  // const user = useSelector((state) => state.user);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -21,10 +27,11 @@ const LoginPage = () => {
 
       // Save token to local storage (or manage state)
       localStorage.setItem('user', JSON.stringify(response.data));
+      dispatch(loginSuccess(response.data.token));
       toast.success("Login successful.");
 
       // Redirect to dashboard
-      navigate('/dashboard');
+      navigate('/Dashboard');
     } catch (error) {
       // Display error notification
       toast.error("Invalid email or password.");
