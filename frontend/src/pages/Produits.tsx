@@ -76,7 +76,8 @@ const Produits = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-  
+
+    
     if (selectedProduct) {
       // Update product
       try {
