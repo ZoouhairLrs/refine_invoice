@@ -3,6 +3,17 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 
 # Create your models here.
+class Produit(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    category = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    stock = models.PositiveIntegerField()
+    image = models.ImageField(upload_to='produits/images/', null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:

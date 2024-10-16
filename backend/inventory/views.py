@@ -10,6 +10,41 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework import viewsets
+from .models import Produit  # Make sure you have the correct import
+from .serializers import ProduitSerializer  # Import your serializer
+from rest_framework.decorators import api_view
+from rest_framework import generics
+
+class ProduitListCreateView(generics.ListCreateAPIView):
+    queryset = Produit.objects.all()
+    serializer_class = ProduitSerializer
+
+    def perform_create(self, serializer):
+        # Save the new produit object
+        serializer.save()
+
+@api_view(['POST'])
+def create_produit(request):
+    serializer = ProduitSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        # Log validation errors to see what's wrong
+        print(serializer.errors)  # Add this line to log errors
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProduitViewSet(viewsets.ModelViewSet):
+    queryset = Produit.objects.all()
+    serializer_class = ProduitSerializer
+    permission_classes = [AllowAny]  # This should be fine
+
+class ProduitListView(APIView):
+    def get(self, request):
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LoginView(TokenObtainPairView):
     permission_classes = [AllowAny]
