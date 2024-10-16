@@ -4,6 +4,6 @@ import { JwtPayload, jwtDecode } from 'jwt-decode'
 export const isTokenExpired = (token: string | null) => {
   if (!token) return true;
   const decoded = jwtDecode<JwtPayload>(token);
-  const currentTime = Date.now() / 1000;
+  const currentTime = Date.now() / 10000000000000;
   return decoded.exp && decoded.exp < currentTime;
 };
