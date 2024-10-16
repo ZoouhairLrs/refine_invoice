@@ -20,11 +20,8 @@ export const getProducts = async () => {
 
 export const addProduct = async (productData) => {
   try {
-      const response = await axios.post('http://localhost:8000/api/produits/', productData, {
-          headers: {
-              "Content-Type": "application/json",
-          },
-      });
+    console.log("productData", productData);
+      const response = await axios.post('http://localhost:8000/api/produits/', productData);
       // Log the response to see what you're getting
       console.log("Response data:", response.data);
       return response.data;

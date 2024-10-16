@@ -76,8 +76,16 @@ const Produits = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    console.log("Submitting form...", {
+      name: formData.get('name'),
+      description: formData.get('description'),
+      category: formData.get('category'),
+      price: formData.get('price'),
+      stock: formData.get('stock'),
+      image: formData.get('image'),
+    });
 
-    
+
     if (selectedProduct) {
       // Update product
       try {
@@ -91,7 +99,14 @@ const Produits = () => {
     } else {
       // Add product
       try {
-        const newProduct = await addProduct(formData);
+        const newProduct = await addProduct({
+          name: formData.get('name'),
+          description: formData.get('description'),
+          category: formData.get('category'),
+          price: Number(formData.get('price')),
+          stock: Number(formData.get('stock')),
+          // image: formData.get('image'),
+        });
         setProducts([...products, newProduct]);
         toast({ title: 'Produit ajouté', description: 'Le produit a été ajouté avec succès.', status: 'success' });
       } catch (error) {
@@ -180,12 +195,12 @@ const Produits = () => {
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input name="productName" placeholder="Nom du produit" defaultValue={selectedProduct ? selectedProduct.name : ''} required />
-            <Textarea name="productDescription" placeholder="Description du produit" defaultValue={selectedProduct ? selectedProduct.description : ''} />
-            <Input name="productCategory" placeholder="Catégorie" defaultValue={selectedProduct ? selectedProduct.category : ''} required />
-            <Input type="number" name="productPrice" placeholder="Prix" defaultValue={selectedProduct ? selectedProduct.price : ''} required />
-            <Input type="number" name="productStock" placeholder="Stock" defaultValue={selectedProduct ? selectedProduct.stock : ''} required />
-            <Input type="file" name="productImage" accept="image/*" />
+            <Input name="name" placeholder="Nom du produit" defaultValue={selectedProduct ? selectedProduct.name : ''} required />
+            <Textarea name="description" placeholder="Description du produit" defaultValue={selectedProduct ? selectedProduct.description : ''} />
+            <Input name="category" placeholder="Catégorie" defaultValue={selectedProduct ? selectedProduct.category : ''} required />
+            <Input type="number" name="price" placeholder="Prix" defaultValue={selectedProduct ? selectedProduct.price : 0} required />
+            <Input type="number" name="stock" placeholder="Stock" defaultValue={selectedProduct ? selectedProduct.stock : 0} required />
+            <Input type="file" name="image" accept="image/*" />
             <DialogFooter>
               <Button type="submit" className="bg-green-600 hover:bg-green-500 text-white">Sauvegarder</Button>
               <Button type="button" onClick={() => setIsDialogOpen(false)} className="bg-gray-300 hover:bg-gray-200">Annuler</Button>
