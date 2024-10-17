@@ -136,7 +136,7 @@ const Produits = () => {
             <Plus className="w-4 h-4" />
             Ajouter Produit
           </Button>
-          <Button onClick={handleRefresh} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white">
+          <Button onClick={handleRefresh} className="flex items-center gap-2 bg-white hover:bg-gray-100 text-black">
             <RefreshCw className="w-4 h-4" />
             Actualiser
           </Button>
@@ -261,7 +261,7 @@ const Produits = () => {
               <Button type="submit" className="bg-green-700 hover:bg-green-800 text-white">
                 {selectedProduit ? 'Modifier' : 'Ajouter'}
               </Button>
-              <Button type="button" onClick={() => setIsDialogOpen(false)} className="text-white">
+              <Button type="button" onClick={() => setIsDialogOpen(false)} className="bg-white hover:bg-gray-100 text-black">
                 Annuler
               </Button>
             </DialogFooter>

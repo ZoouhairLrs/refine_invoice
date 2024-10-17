@@ -120,7 +120,7 @@ const ClientsPage = () => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle className="text-2xl font-bold">Gestion des Clients</CardTitle>
+              <CardTitle className="text-2xl font-bold text-green-800">Gestion des Clients</CardTitle>
               <CardDescription>Gérez vos clients et leurs informations</CardDescription>
             </div>
             <div className="flex gap-2">
