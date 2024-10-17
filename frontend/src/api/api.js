@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:8000/api/produits/'; // Replace with your actual API URL
 
-export const getProducts = async () => {
+export const getProduits = async () => {
   const response = await axios.get(API_URL);
   return response.data;
   console.log(response.data);
@@ -18,12 +18,11 @@ export const getProducts = async () => {
 //   }
 // };
 
-export const addProduct = async (productData) => {
+export const addProduit = async (productData) => {
   try {
     console.log("productData", productData);
       const response = await axios.post('http://localhost:8000/api/produits/', productData);
       // Log the response to see what you're getting
-      console.log("Response data:", response.data);
       return response.data;
   } catch (error) {
       // Log error details
@@ -32,11 +31,11 @@ export const addProduct = async (productData) => {
   }
 };
 
-export const updateProduct = async (id, product) => {
+export const updateProduit = async (id, product) => {
   const response = await axios.put(`${API_URL}${id}/`, product);
   return response.data;
 };
 
-export const deleteProduct = async (id) => {
+export const deleteProduit = async (id) => {
   await axios.delete(`${API_URL}${id}/`);
 };
