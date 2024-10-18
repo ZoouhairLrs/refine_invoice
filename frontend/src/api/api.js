@@ -1,41 +1,51 @@
-// src/services/api.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api/produits/'; // Replace with your actual API URL
+const API_URL = 'http://localhost:8000/api'; // Replace with your backend URL
 
+// Fetch all products
 export const getProduits = async () => {
-  const response = await axios.get(API_URL);
-  return response.data;
-  console.log(response.data);
-};
-
-// export const addProduct = async (productData) => {
-//   try {
-//       const response = await axios.post('http://localhost:8000/api/produits/', productData); // ensure the endpoint is correct
-//       return response.data;
-//   } catch (error) {
-//       throw error; // This will allow you to catch the error in your handleAddProduct function
-//   }
-// };
-
-export const addProduit = async (productData) => {
   try {
-    console.log("productData", productData);
-      const response = await axios.post('http://localhost:8000/api/produits/', productData);
-      // Log the response to see what you're getting
-      return response.data;
+    const response = await axios.get(`${API_URL}/produits`);
+    return response.data;
   } catch (error) {
-      // Log error details
-      console.error("Error adding product:", error.response?.data || error.message);
-      throw error;  // Re-throw the error if you need to handle it elsewhere
+    throw new Error('Erreur lors de la récupération des produits.');
   }
 };
 
-export const updateProduit = async (id, product) => {
-  const response = await axios.put(`${API_URL}${id}/`, product);
-  return response.data;
+// Add a new product
+export const addProduit = async (formData) => {
+  try {
+    const response = await axios.post(`${API_URL}/produits`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Erreur lors de l’ajout du produit.');
+  }
 };
 
+// Update a product
+export const updateProduit = async (id, formData) => {
+  try {
+    const response = await axios.put(`${API_URL}/produits/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Erreur lors de la mise à jour du produit.');
+  }
+};
+
+// Delete a product
 export const deleteProduit = async (id) => {
-  await axios.delete(`${API_URL}${id}/`);
+  try {
+    const response = await axios.delete(`${API_URL}/produits/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Erreur lors de la suppression du produit.');
+  }
 };
