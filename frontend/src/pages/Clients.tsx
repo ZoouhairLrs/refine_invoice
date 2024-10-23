@@ -30,21 +30,11 @@ import {
 import { useToast } from "../hooks/use-toast";
 import { Plus, Search, Edit, Trash, Mail, Phone, MapPin, Building2, RefreshCw } from 'lucide-react';
 
-const ClientsPage = () => {
-  const [clients, setClients] = useState([
-    {
-      id: 1,
-      name: "Société ABC",
-      contact: "John Doe",
-      email: "contact@abc.com",
-      phone: "+212 6-12-34-56-78",
-      address: "123 Rue Mohammed V, Casablanca",
-      type: "enterprise",
-      status: "active"
-    },
-    // Add more sample clients if needed
-  ]);
+// Import your API functions
+import { getData, addData, updateData, deleteData } from '../api/api';
 
+const ClientsPage = () => {
+  const [clients, setClients] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,18 +42,28 @@ const ClientsPage = () => {
   const [clientToDelete, setClientToDelete] = useState(null);
   const { toast } = useToast();
 
-  const filteredClients = clients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.contact.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Fetch all clients from the back-end
+  const fetchClients = async () => {
+    try {
+      const data = await getData('clients');
+      setClients(data);
+      toast({ title: 'Clients chargés', description: 'Les clients ont été chargés avec succès.' });
+    } catch (error) {
+      toast({ title: 'Erreur', description: 'Erreur lors de la récupération des clients.', status: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
 
   const handleAddClient = () => {
-    setSelectedClient(null);
+    setSelectedClient(null); // Reset the form for new client
     setIsDialogOpen(true);
   };
 
   const handleEditClient = (client) => {
-    setSelectedClient(client);
+    setSelectedClient(client); // Preload form with selected client data
     setIsDialogOpen(true);
   };
 
@@ -72,44 +72,37 @@ const ClientsPage = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    setClients(clients.filter(c => c.id !== clientToDelete.id));
-    toast({
-      title: "Client supprimé",
-      description: "Le client a été supprimé avec succès.",
-    });
+  const handleDeleteConfirm = async () => {
+    try {
+      await deleteData('clients', clientToDelete.id); // Correct path for delete
+      setClients(clients.filter(c => c.id !== clientToDelete.id));
+      toast({ title: 'Client supprimé', description: 'Le client a été supprimé avec succès.' });
+    } catch (error) {
+      toast({ title: 'Erreur', description: 'Erreur lors de la suppression du client.', status: 'error' });
+    }
     setIsDeleteDialogOpen(false);
     setClientToDelete(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const clientData = Object.fromEntries(formData);
 
-    if (selectedClient) {
-      // Update existing client
-      setClients(clients.map(c => 
-        c.id === selectedClient.id ? { ...c, ...clientData } : c
-      ));
-      toast({
-        title: "Client mis à jour",
-        description: "Les informations du client ont été mises à jour avec succès.",
-      });
-    } else {
-      // Add new client
-      setClients([
-        ...clients,
-        {
-          id: clients.length + 1,
-          ...clientData,
-          status: 'active'
-        }
-      ]);
-      toast({
-        title: "Client ajouté",
-        description: "Le nouveau client a été ajouté avec succès.",
-      });
+    try {
+      if (selectedClient) {
+        // Update client
+        await updateData('clients', selectedClient.id, clientData); // Correct the update call
+        setClients(clients.map(c => (c.id === selectedClient.id ? { ...c, ...clientData } : c)));
+        toast({ title: 'Client mis à jour', description: 'Le client a été mis à jour avec succès.' });
+      } else {
+        // Add new client
+        const newClient = await addData('clients', clientData);
+        setClients([...clients, newClient]);
+        toast({ title: 'Client ajouté', description: 'Le nouveau client a été ajouté avec succès.' });
+      }
+    } catch (error) {
+      toast({ title: 'Erreur', description: 'Erreur lors de l\'ajout ou mise à jour du client.', status: 'error' });
     }
     setIsDialogOpen(false);
   };
@@ -131,15 +124,7 @@ const ClientsPage = () => {
                 <Plus className="w-4 h-4 mr-2" />
                 Nouveau Client
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  toast({
-                    title: "Liste actualisée",
-                    description: "La liste des clients a été actualisée.",
-                  });
-                }}
-              >
+              <Button variant="outline" onClick={fetchClients}>
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Actualiser
               </Button>
@@ -173,7 +158,7 @@ const ClientsPage = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredClients.map((client) => (
+                {clients.map((client) => (
                   <TableRow key={client.id}>
                     <TableCell className="font-medium">{client.name}</TableCell>
                     <TableCell>{client.contact}</TableCell>
@@ -248,7 +233,7 @@ const ClientsPage = () => {
                     id="name"
                     name="name"
                     placeholder="Nom de la société"
-                    defaultValue={selectedClient?.name}
+                    defaultValue={selectedClient?.name || ''}
                     className="pl-10"
                     required
                   />
@@ -260,7 +245,7 @@ const ClientsPage = () => {
                   id="contact"
                   name="contact"
                   placeholder="Nom complet"
-                  defaultValue={selectedClient?.contact}
+                  defaultValue={selectedClient?.contact || ''}
                   required
                 />
               </div>
@@ -276,7 +261,7 @@ const ClientsPage = () => {
                     name="email"
                     type="email"
                     placeholder="email@exemple.com"
-                    defaultValue={selectedClient?.email}
+                    defaultValue={selectedClient?.email || ''}
                     className="pl-10"
                     required
                   />
@@ -290,7 +275,7 @@ const ClientsPage = () => {
                     id="phone"
                     name="phone"
                     placeholder="+212 6-XX-XX-XX-XX"
-                    defaultValue={selectedClient?.phone}
+                    defaultValue={selectedClient?.phone || ''}
                     className="pl-10"
                     required
                   />
@@ -306,7 +291,7 @@ const ClientsPage = () => {
                   id="address"
                   name="address"
                   placeholder="Adresse complète"
-                  defaultValue={selectedClient?.address}
+                  defaultValue={selectedClient?.address || ''}
                   className="pl-10 min-h-[80px]"
                   required
                 />

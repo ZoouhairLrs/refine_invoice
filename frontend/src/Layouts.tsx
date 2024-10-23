@@ -50,7 +50,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="min-h-screen h-screen bg-background flex flex-col">
       {/* Top Navigation */}
-      <header className="sticky top-0 z-40 border-b bg-background">
+      <header className="sticky top-0 z-40 border-b bg-background shadow-md">
         <div className="flex h-16 items-center px-4">
           {/* Left section with menu and logo */}
           <div className="flex items-center gap-4 flex-1">
@@ -94,7 +94,7 @@ const DashboardLayout = ({ children }) => {
             </Button>
 
             {/* Logo/Company Name */}
-            <span className="font-semibold text-lg text-green-600">Company Name</span>
+            <span className="font-semibold text-lg text-green-600">CRM ERP System</span>
           </div>
 
           {/* Center section with search */}
@@ -103,7 +103,7 @@ const DashboardLayout = ({ children }) => {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search anything..."
+                placeholder="Search..."
                 className="w-full pl-8"
               />
             </div>
@@ -175,7 +175,7 @@ const DashboardLayout = ({ children }) => {
         {/* Desktop Sidebar */}
         <aside className={`${
           isSidebarOpen ? 'w-64' : 'w-16'
-        } hidden lg:block border-r bg-background flex-shrink-0`}>
+        } hidden lg:block border-r bg-background flex-shrink-0 transition-all duration-300 ease-in-out`}>
           <nav className="h-full py-4 px-3">
             {navigationItems.map((item) => (
               <Link key={item.label} to={item.path}>

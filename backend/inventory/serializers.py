@@ -4,29 +4,38 @@ from django.contrib.auth import authenticate
 from .models import CustomUser
 from .models import Produit
 from rest_framework import generics
+from .models import Client
+from .models import Facture
+
 # from .serializers import ProduitSerializer
 
 class ProduitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produit
+        fields = ['id', 'name', 'description', 'category', 'price', 'stock', 'image']  # Include the image field
+
+    # Custom update method to handle the image field
+    def update(self, instance, validated_data):
+        image = validated_data.get('image', None)
+        if image:
+            instance.image = image  # Update the image if a new one is provided
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.category = validated_data.get('category', instance.category)
+        instance.price = validated_data.get('price', instance.price)
+        instance.stock = validated_data.get('stock', instance.stock)
+        instance.save()
+        return instance
+
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
         fields = '__all__'
-        extra_kwargs = {
-            'name': {'required': True},
-            'description': {'required': True},
-            'category': {'required': True},
-            'price': {'required': True},
-            'stock': {'required': True},
-            'image': {'required': False}
-        }
 
-
-# class ProduitListCreateView(generics.ListCreateAPIView):
-#     queryset = Produit.objects.all()
-#     serializer_class = ProduitSerializer
-
-#     def perform_create(self, serializer):
-#         Produit = serializer.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+class FactureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Facture
+        fields = '__all__'
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()

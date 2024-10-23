@@ -3,13 +3,14 @@ import { useSelector } from 'react-redux';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Dashboard from '../pages/Dashboard';
 import Login from '../pages/Login';
-import Produits from '../pages/produits';
+import Produits from '../pages/Produits';
 import Clients from '../pages/Clients';
 import Factures from '../pages/Factures';
 import BondDeCommands from '../pages/BondDeCommand';
 import Devis from '../pages/Devis';
 import { RootState } from '../redux/store'; // Adjust according to your file structure
 import AppLayout from '../Layouts';
+import { ToastAction } from '@radix-ui/react-toast';
 
 const AppRoutes = () => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -21,7 +22,6 @@ const AppRoutes = () => {
         path="/"
         element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
       />
-      
       {/* Login Route */}
       <Route path="/login" element={<Login />} />
 

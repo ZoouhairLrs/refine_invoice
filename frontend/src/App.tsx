@@ -7,6 +7,8 @@ import { logout } from './redux/authSlice';
 import { isTokenExpired } from './utils/authUtils';
 import AppRoutes from './routes/routes';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
+import { ToastContainer } from 'react-toastify'; // Import the ToastProvider
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for the toast
 
 const App = () => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -39,6 +41,7 @@ const App = () => {
   return (
     <div>
       <AppRoutes /> {/* Render the routes for your app */}
+      <ToastContainer /> {/* Add the ToastContainer component here */}
     </div>
   );
 };

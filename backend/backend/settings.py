@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
     # Third party middleware
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Add this at the top
     'django.middleware.common.CommonMiddleware',
 
 ]
@@ -71,11 +71,11 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True  # For development only. Configure properly for production.
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Your front-end URL
+    "http://localhost:5173"
 ]
-
 
 ROOT_URLCONF = 'backend.urls'
 

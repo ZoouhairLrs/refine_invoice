@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
-
 # Create your models here.
 class Produit(models.Model):
     name = models.CharField(max_length=255)
@@ -13,6 +12,32 @@ class Produit(models.Model):
 
     def __str__(self):
         return self.name
+
+class Client(models.Model):
+    name = models.CharField(max_length=255)
+    contact = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=20)
+    address = models.TextField()
+    CLIENT_TYPE_CHOICES = [
+        ('enterprise', 'Entreprise'),
+        ('individual', 'Particulier'),
+    ]
+    type = models.CharField(max_length=20, choices=CLIENT_TYPE_CHOICES, default='enterprise')
+    status = models.CharField(max_length=20, default='active')
+
+    def __str__(self):
+        return self.name
+
+class Facture(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    number = models.CharField(max_length=100, unique=True)
+    date = models.DateField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=[('paid', 'Paid'), ('unpaid', 'Unpaid')])
+
+    def __str__(self):
+        return f"Facture {self.number} - {self.client.name}"
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
