@@ -15,6 +15,7 @@ export const getData = async (resource) => {
 // Add a new resource (e.g., produit, client, etc.)
 export const addData = async (resource, formData) => {
   try {
+    console.log(`${API_URL}/${resource}/`);
     const response = await axios.post(`${API_URL}/${resource}/`, formData, {  // Add trailing slash here
       headers: {
         'Content-Type': 'multipart/form-data',  // Required for file uploads

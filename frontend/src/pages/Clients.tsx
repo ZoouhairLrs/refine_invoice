@@ -30,7 +30,6 @@ import {
 import { useToast } from "../hooks/use-toast";
 import { Plus, Search, Edit, Trash, Mail, Phone, MapPin, Building2, RefreshCw } from 'lucide-react';
 
-// Import your API functions
 import { getData, addData, updateData, deleteData } from '../api/api';
 
 const ClientsPage = () => {
@@ -42,7 +41,6 @@ const ClientsPage = () => {
   const [clientToDelete, setClientToDelete] = useState(null);
   const { toast } = useToast();
 
-  // Fetch all clients from the back-end
   const fetchClients = async () => {
     try {
       const data = await getData('clients');
@@ -58,12 +56,12 @@ const ClientsPage = () => {
   }, []);
 
   const handleAddClient = () => {
-    setSelectedClient(null); // Reset the form for new client
+    setSelectedClient(null);
     setIsDialogOpen(true);
   };
 
   const handleEditClient = (client) => {
-    setSelectedClient(client); // Preload form with selected client data
+    setSelectedClient(client);
     setIsDialogOpen(true);
   };
 
@@ -74,7 +72,7 @@ const ClientsPage = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await deleteData('clients', clientToDelete.id); // Correct path for delete
+      await deleteData('clients', clientToDelete.id);
       setClients(clients.filter(c => c.id !== clientToDelete.id));
       toast({ title: 'Client supprimé', description: 'Le client a été supprimé avec succès.' });
     } catch (error) {
@@ -88,11 +86,23 @@ const ClientsPage = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const clientData = Object.fromEntries(formData);
-
+  
+    // Check for duplicate client by email or ICE
+    const duplicateClient = clients.find(client => client.email === clientData.email || client.ice === clientData.ice);
+  
+    if (duplicateClient) {
+      toast({
+        title: 'Erreur',
+        description: 'Ce client existe déjà dans la base de données.',
+        status: 'error'
+      });
+      return;
+    }
+  
     try {
       if (selectedClient) {
-        // Update client
-        await updateData('clients', selectedClient.id, clientData); // Correct the update call
+        // Update existing client
+        await updateData('clients', selectedClient.id, clientData);
         setClients(clients.map(c => (c.id === selectedClient.id ? { ...c, ...clientData } : c)));
         toast({ title: 'Client mis à jour', description: 'Le client a été mis à jour avec succès.' });
       } else {
@@ -102,8 +112,13 @@ const ClientsPage = () => {
         toast({ title: 'Client ajouté', description: 'Le nouveau client a été ajouté avec succès.' });
       }
     } catch (error) {
-      toast({ title: 'Erreur', description: 'Erreur lors de l\'ajout ou mise à jour du client.', status: 'error' });
+      toast({
+        title: 'Erreur',
+        description: "Erreur lors de l'ajout ou mise à jour du client.",
+        status: 'error'
+      });
     }
+  
     setIsDialogOpen(false);
   };
 
@@ -152,8 +167,8 @@ const ClientsPage = () => {
                   <TableHead>Contact</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Téléphone</TableHead>
+                  <TableHead>ICE</TableHead>
                   <TableHead>Type</TableHead>
-                  <TableHead>Statut</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -164,6 +179,7 @@ const ClientsPage = () => {
                     <TableCell>{client.contact}</TableCell>
                     <TableCell>{client.email}</TableCell>
                     <TableCell>{client.phone}</TableCell>
+                    <TableCell>{client.ice}</TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         client.type === 'enterprise' 
@@ -171,15 +187,6 @@ const ClientsPage = () => {
                           : 'bg-green-100 text-green-800'
                       }`}>
                         {client.type === 'enterprise' ? 'Entreprise' : 'Particulier'}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        client.status === 'active' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {client.status === 'active' ? 'Actif' : 'Inactif'}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -280,6 +287,38 @@ const ClientsPage = () => {
                     required
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ice">ICE</Label>
+              <Input
+                id="ice"
+                name="ice"
+                placeholder="ICE du client"
+                defaultValue={selectedClient?.ice || ''}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="ville">Ville</Label>
+                <Input
+                  id="ville"
+                  name="ville"
+                  placeholder="Ville"
+                  defaultValue={selectedClient?.ville || ''}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="pays">Pays</Label>
+                <Input
+                  id="pays"
+                  name="pays"
+                  placeholder="Pays"
+                  defaultValue={selectedClient?.pays || ''}
+                />
               </div>
             </div>
 

@@ -32,6 +32,11 @@ class ClientSerializer(serializers.ModelSerializer):
         model = Client
         fields = '__all__'
 
+    def validate(self, data):
+        # Log the validated data for debugging
+        print("Validated data:", data)
+        return data
+
 class FactureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Facture

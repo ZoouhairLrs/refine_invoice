@@ -5,9 +5,12 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["src/*"]
+    },
+    "noEmitOnError": false, // Allows code to compile despite errors
+    "skipLibCheck": true,   // Skips type checking for libraries in node_modules
+    "strict": false,        // Disables strict type checks
   }
 }

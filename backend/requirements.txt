@@ -1,0 +1,10 @@
+Django==3.2  # Or your desired version
+djangorestframework==3.12.4  # Or your desired version
+djangorestframework-simplejwt==4.7.2  # Or your desired version
+psycopg2-binary==2.9.1  # Postgres connector for Django
+Pillow==8.2.0  # Or the latest stable version
+django-cors-headers # Or the latest stable version
+gunicorn==20.1.0  # Or the latest stable version
+whitenoise==6.4.0  # Or the latest stable version
+
+# ... Add any other dependencies

@@ -8,6 +8,7 @@ import Clients from '../pages/Clients';
 import Factures from '../pages/Factures';
 import BondDeCommands from '../pages/BondDeCommand';
 import Devis from '../pages/Devis';
+import CreateFacture from '../components/CreateFacture';
 import { RootState } from '../redux/store'; // Adjust according to your file structure
 import AppLayout from '../Layouts';
 import { ToastAction } from '@radix-ui/react-toast';
@@ -62,6 +63,16 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <AppLayout>
               <Factures />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ajouter-facture"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <CreateFacture />
             </AppLayout>
           </ProtectedRoute>
         }
